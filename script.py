@@ -47,7 +47,7 @@ class Publisher(tornado.web.RequestHandler):
             "country": data["country"]
         }
 
-        result = publishers_collection.insert_one(nuovo_editore)
+        await publishers_collection.insert_one(nuovo_editore)
 
         self.set_header("Content-Type", "application/json")
 
