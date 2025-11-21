@@ -1,12 +1,26 @@
-import pymongo
 import tornado.web
 import tornado.ioloop
 import asyncio
 import json
 import pymongo
 
-client = pymongo.AsyncMongoClient("mongodb://localhost:27017")
+
 data = {"lista": []}
+
+client = pymongo.AsyncMongoClient("mongodb://localhost:27017")
+db = client["publisher_db"]
+publishers_collection = db["publishers"]
+
+async def popola_data():
+    cursor = publishers_collection.find({})
+    async for documento in cursor:
+        documento["_id"] = str(documento["_id"])
+        data["lista"].append(documento)
+
+
+asyncio.run(popola_data())
+
+
 
 class Publisher(tornado.web.RequestHandler):
 
