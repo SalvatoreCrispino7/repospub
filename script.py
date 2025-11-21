@@ -2,8 +2,7 @@ import tornado.web
 import tornado.ioloop
 import asyncio
 import json
-import pymongo
-from setup_database import data
+from setup_database import data, db, publishers_collection, books_collection
 
 
 
@@ -24,12 +23,13 @@ class Publisher(tornado.web.RequestHandler):
         self.write(json.dumps({"lista": result}))
 
     async def post(self):
-        data = json.loads(self.request.body)
+
+        data1 = json.loads(self.request.body)
 
         nuovo_editore = {
-            "name": data["name"],
-            "founded_year": data["founded_year"],
-            "country": data["country"]
+            "name": data1["name"],
+            "founded_year": data1["founded_year"],
+            "country": data1["country"]
         }
 
         await publishers_collection.insert_one(nuovo_editore)
@@ -43,6 +43,11 @@ def make_app():
 
 
 async def main(shutdown_event):
+    cursor = publishers_collection.find({})
+    async for documento in cursor:
+        documento["_id"] = str(documento["_id"])
+        data["lista"].append(documento)
+
     app = make_app()
     app.listen(8888)
     print("Server attivo su http://localhost:8888/publishers")

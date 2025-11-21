@@ -20,10 +20,7 @@ async def main():
         "year": 2024
     })
 
-    cursor = publishers_collection.find({})
-    async for documento in cursor:
-        documento["_id"] = str(documento["_id"])
-        data["lista"].append(documento)
+
 
 
 
