@@ -36,9 +36,21 @@ class Publisher(tornado.web.RequestHandler):
 
         self.set_header("Content-Type", "application/json")
 
+
+
+class PublisherCasaEditrice(tornado.web.RequestHandler):
+
+    async def get(self, id):
+        result = [editore for editore in data["lista"] if str(editore["_id"]) == id]
+
+        self.set_header("Content-Type", "application/json")
+        self.write(json.dumps({"lista": result}))
+
+
 def make_app():
     return tornado.web.Application([
         (r"/publishers", Publisher),
+        (r"/publishers/([0-9a-z]+)", PublisherCasaEditrice),
     ])
 
 
