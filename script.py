@@ -2,6 +2,9 @@ import tornado.web
 import tornado.ioloop
 import asyncio
 import json
+
+from bson import ObjectId
+
 from setup_database import data, db, publishers_collection, books_collection
 
 
@@ -46,6 +49,24 @@ class PublisherCasaEditrice(tornado.web.RequestHandler):
         self.set_header("Content-Type", "application/json")
         self.write(json.dumps({"lista": result}))
 
+    async def put(self, id):
+        data1 = json.loads(self.request.body)
+
+        editore_Aggiornato = {
+            "name": data1["name"],
+            "founded_year": data1["founded_year"],
+            "country": data1["country"]
+        }
+
+        await publishers_collection.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": editore_Aggiornato}
+        )
+
+        self.set_header("Content-Type", "application/json")
+
+    async def delete(self, id):
+        await publishers_collection.delete_one({"_id": ObjectId(id)})
 
 def make_app():
     return tornado.web.Application([
