@@ -93,8 +93,19 @@ class PublisherBooks(tornado.web.RequestHandler):
         self.set_header("Content-Type", "application/json")
         self.write(json.dumps({"lista": result}))
 
+    async def post(self, id_editore):
+        data1 = json.loads(self.request.body)
 
+        nuovo_libro = {
+        "publisher_id": id_editore,
+        "title": data1["title"],
+        "author": data1["author"],
+        "genre": data1["genre"],
+        "year": 2008
+        }
+        await books_collection.insert_one(nuovo_libro)
 
+        self.set_header("Content-Type", "application/json")
 
 
 def make_app():
