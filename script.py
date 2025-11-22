@@ -67,7 +67,7 @@ class PublisherCasaEditrice(tornado.web.RequestHandler):
 
     async def delete(self, id):
         await publishers_collection.delete_one({"_id": ObjectId(id)})
-        await books_collection.delete_many({"publisher_id": ObjectId(id)})
+        await books_collection.delete_many({"publisher_id": id})
 
 class PublisherBooks(tornado.web.RequestHandler):
 
