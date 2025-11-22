@@ -67,7 +67,7 @@ class PublisherCasaEditrice(tornado.web.RequestHandler):
 
     async def delete(self, id):
         await publishers_collection.delete_one({"_id": ObjectId(id)})
-
+        await books_collection.find({"publisher_id": ObjectId(id)})
 
 class PublisherBooks(tornado.web.RequestHandler):
 
@@ -107,12 +107,16 @@ class PublisherBooks(tornado.web.RequestHandler):
 
         self.set_header("Content-Type", "application/json")
 
+class BookHandler(tornado.web.RequestHandler):
+    async def get(self):
 
 def make_app():
     return tornado.web.Application([
         (r"/publishers", Publisher),
         (r"/publishers/([0-9a-z]+)", PublisherCasaEditrice),
         (r"/publishers/([0-9a-z]+)/books", PublisherBooks),
+        (r"/publishers/([0-9a-z]+)/books/([0-9a-z]+)", BookHandler),
+
     ])
 
 
